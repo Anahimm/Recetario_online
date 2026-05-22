@@ -6,7 +6,8 @@ interface DatosRegistro {
 }
 
 
-const API_URL = 'https://desafio-terrand-uyil.onrender.com/api/auth';
+const BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = `${BASE_URL}/auth`;
 
 export const registrarUsuario = async (datos: DatosRegistro) => {
     const respuesta = await fetch(`${API_URL}/registro`, {

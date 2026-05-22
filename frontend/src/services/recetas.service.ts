@@ -1,4 +1,5 @@
-const API_URL = 'https://desafio-terrand-uyil.onrender.com/api/recetas';
+const BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = `${BASE_URL}/recetas`;
 
 export const obtenerMisRecetas = async () => {
     const token = localStorage.getItem('token');

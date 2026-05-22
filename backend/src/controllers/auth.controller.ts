@@ -7,7 +7,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || 'secreto_recetas';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    throw new Error('ERROR FATAL: JWT_SECRET no está definido en el archivo .env');
+}
 
 //REGISTRO
 export const registro = async (req: Request, res: Response): Promise<void> => {

@@ -4,6 +4,7 @@ import { iniciarSesion as loginAPI } from '../services/auth.service';
 import { useAuth } from '../context/AuthContext';
 import styles from './login.module.css';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -32,7 +33,13 @@ export const Login = () => {
             const nombreUsuario = respuesta.usuario?.nombre || 'Chef';
             iniciarSesion(nombreUsuario, respuesta.token);
 
-            alert(`¡Bienvenida/o de vuelta, ${nombreUsuario}!`);
+            Swal.fire({
+                title: '¡Éxito!',
+                text: `¡Bienvenida/o de vuelta, ${nombreUsuario}!`,
+                icon: 'success',
+                confirmButtonText: 'Empezar a cocinar',
+                confirmButtonColor: '#3085d6'
+            });
             navigate('/mis-recetas');
 
         } catch (err) {
@@ -64,7 +71,7 @@ export const Login = () => {
                         required
                     />
                 </div>
-                
+
                 <div className={styles.inputContainer}>
                     <span>
                         <Lock size={20} />

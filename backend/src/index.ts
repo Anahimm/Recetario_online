@@ -4,9 +4,13 @@ import authRoutes from './routes/auth.routes'; // Importamos las rutas
 import recetasRoutes from './routes/recetas.routes';
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-app.use(cors());
+app.use(cors({
+    origin: FRONTEND_URL,
+    credentials: true
+}));
 app.use(express.json());
 
 // Conecto las rutas de autenticación
@@ -18,6 +22,6 @@ app.get('/', (req, res) => {
     res.send('El servidor del recetario esta levantado');
 });
 
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

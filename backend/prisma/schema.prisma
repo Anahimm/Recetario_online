@@ -19,20 +19,44 @@ model Usuario {
 }
 
 model Receta {
-  id             Int      @id @default(autoincrement())
-  titulo         String   @db.VarChar(255)
-  descripcion    String   @db.Text
-  ingredientes   String   @db.Text
-  imagen_url     String?  @db.VarChar(500)
-  fecha_creacion DateTime @default(now())
+  id             Int                 @id @default(autoincrement())
+  titulo         String              @db.VarChar(255)
+  descripcion    String              @db.Text
+  imagen_url     String?             @db.VarChar(500)
+  fecha_creacion DateTime            @default(now())
+  
   usuario_id     Int
-  usuario        Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
-  calificaciones   Calificacion[]
+  usuario        Usuario             @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  
+  calificaciones Calificacion[]
+  // Relación hacia la tabla intermedia de ingredientes
+  ingredientes   RecetaIngrediente[]
+}
+
+model Ingrediente {
+  id             Int                 @id @default(autoincrement())
+  nombre         String              @unique @db.VarChar(100)
+  
+  recetas        RecetaIngrediente[]
+}
+
+// Tabla intermedia explícita
+model RecetaIngrediente {
+  id             Int         @id @default(autoincrement())
+  cantidad       String      @db.VarChar(100)
+  receta_id      Int
+  receta         Receta      @relation(fields: [receta_id], references: [id], onDelete: Cascade)
+  
+  ingrediente_id Int
+  ingrediente    Ingrediente @relation(fields: [ingrediente_id], references: [id], onDelete: Cascade)
+
+  // Evita que alguien cargue el mismo ingrediente dos veces en la misma receta
+  @@unique([receta_id, ingrediente_id])
 }
 
 model Calificacion{
   id            Int       @id @default(autoincrement())
-  puntaje       Int       
+  puntaje       Int
   usuario_id    Int
   usuario       Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
   receta_id     Int
