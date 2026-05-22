@@ -15,11 +15,35 @@ export const crearReceta = async (req: AuthRequest, res: Response): Promise<void
             return;
         }
 
+        // Creamos la receta base
         const nuevaReceta = await prisma.receta.create({
-            data: { titulo, descripcion, ingredientes, imagen_url, usuario_id }
+            data: { titulo, descripcion, imagen_url, usuario_id }
         });
-        res.status(201).json(nuevaReceta);
+
+        // Procesamos el array de ingredientes
+        if (ingredientes && Array.isArray(ingredientes)) {
+            for (const item of ingredientes) {
+                // UPSERT: Busca el ingrediente. Si existe, lo trae. Si no existe, lo crea.
+                // Lo pasamos a minúsculas para no tener duplicados.
+                const ingredienteDb = await prisma.ingrediente.upsert({
+                    where: { nombre: item.nombre.toLowerCase() },
+                    update: {},
+                    create: { nombre: item.nombre.toLowerCase() }
+                });
+
+                // Creamos la relación en la tabla intermedia con la cantidad
+                await prisma.recetaIngrediente.create({
+                    data: {
+                        cantidad: item.cantidad,
+                        receta_id: nuevaReceta.id,
+                        ingrediente_id: ingredienteDb.id
+                    }
+                });
+            }
+        }
+        res.status(201).json({ mensaje: 'Receta creada con éxito', id: nuevaReceta.id });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Error interno al guardar la receta' });
     }
 };
@@ -29,7 +53,14 @@ export const obtenerMisRecetas = async (req: AuthRequest, res: Response): Promis
     try {
         const usuario_id = req.usuario_id;
         const misRecetas = await prisma.receta.findMany({
-            where: { usuario_id: usuario_id }
+            where: { usuario_id: usuario_id },
+            include: {
+                ingredientes: {
+                    include: {
+                        ingrediente: true 
+                    }
+                }
+            }
         });
         res.json(misRecetas);
     } catch (error) {
@@ -44,14 +75,42 @@ export const editarReceta = async (req: AuthRequest, res: Response): Promise<voi
         const { titulo, descripcion, ingredientes, imagen_url } = req.body;
         const usuario_id = req.usuario_id;
 
-        const recetaActualizada = await prisma.receta.updateMany({
-            where: { id: Number(id), usuario_id: usuario_id },
-            data: { titulo, descripcion, ingredientes, imagen_url }
+        // Verificamos que la receta exista y sea de este usuario
+        const recetaExistente = await prisma.receta.findFirst({
+            where: { id: Number(id), usuario_id: usuario_id }
         });
 
-        if (recetaActualizada.count === 0) {
+        if (!recetaExistente) {
             res.status(404).json({ error: 'Receta no encontrada o no tenés permiso' });
             return;
+        }
+        // Actualizamos los datos básicos y borramos las relaciones viejas de ingredientes
+        await prisma.receta.update({
+            where: { id: recetaExistente.id },
+            data: { 
+                titulo, 
+                descripcion, 
+                imagen_url,
+                ingredientes: { deleteMany: {} }
+            }
+        });
+
+        // Volvemos a insertar los ingredientes actualizados
+        if (ingredientes && Array.isArray(ingredientes)) {
+            for (const item of ingredientes) {
+                const ingredienteDb = await prisma.ingrediente.upsert({
+                    where: { nombre: item.nombre.toLowerCase() },
+                    update: {},
+                    create: { nombre: item.nombre.toLowerCase() }
+                });
+                await prisma.recetaIngrediente.create({
+                    data: {
+                        cantidad: item.cantidad,
+                        receta_id: recetaExistente.id,
+                        ingrediente_id: ingredienteDb.id
+                    }
+                });
+            }
         }
         res.json({ mensaje: 'Receta actualizada con éxito' });
     } catch (error) {
@@ -85,7 +144,8 @@ export const obtenerRecetasPublicas = async (req: Request, res: Response): Promi
         const recetas = await prisma.receta.findMany({
             include: {
                 usuario: { select: { nombre: true, apellido: true } },
-                calificaciones: true
+                calificaciones: true,
+                ingredientes: { include: { ingrediente: true } }
             },
             orderBy: { id: 'desc' }
         });
@@ -102,7 +162,8 @@ export const obtenerUnaRecetaPublica = async (req: Request, res: Response): Prom
         const receta = await prisma.receta.findUnique({
             where: { id: Number(id) },
             include: {
-                usuario: { select: { nombre: true, apellido: true } }
+                usuario: { select: { nombre: true, apellido: true } },
+                ingredientes: { include: { ingrediente: true } }
             }
         });
 

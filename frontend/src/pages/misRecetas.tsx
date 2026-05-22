@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react';
-import { obtenerMisRecetas, crearReceta, actualizarReceta, eliminarReceta } from '../services/recetas.service';
+import { obtenerMisRecetas, crearReceta, actualizarReceta, eliminarReceta, type IngredienteItem } from '../services/recetas.service';
 import { RecetaCard, type Receta } from '../components/recetaCard';
-import { RecetaModal} from '../components/recetaModal';
+import { RecetaModal } from '../components/recetaModal';
 import styles from './misRecetas.module.css';
+import Swal from 'sweetalert2'; 
+
+// Definimos el estado inicial como una constante para mantener el código limpio
+const ESTADO_INICIAL_RECETA = {
+    titulo: '',
+    descripcion: '',
+    ingredientes: [{ nombre: '', cantidad: '' }], // Arranca con 1 ingrediente vacío
+    imagen_url: ''
+};
 
 export const MisRecetas = () => {
     const [recetas, setRecetas] = useState<Receta[]>([]);
@@ -11,12 +20,7 @@ export const MisRecetas = () => {
     // ESTADOS PARA EL MODAL
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [recetaEditandoId, setRecetaEditandoId] = useState<number | null>(null);
-    const [nuevaReceta, setNuevaReceta] = useState({
-        titulo: '',
-        descripcion: '',
-        ingredientes: '',
-        imagen_url: ''
-    });
+    const [nuevaReceta, setNuevaReceta] = useState(ESTADO_INICIAL_RECETA);
 
     const nombre = localStorage.getItem('nombreUsuario');
 
@@ -36,19 +40,26 @@ export const MisRecetas = () => {
         cargarRecetas();
     }, []);
 
-    // FUNCIONES PARA MANEJAR EL MODAL Y ELIMINAR
+    // --- FUNCIONES PARA MANEJAR EL MODAL Y ELIMINAR ---
     const abrirModalCrear = () => {
         setRecetaEditandoId(null);
-        setNuevaReceta({ titulo: '', descripcion: '', ingredientes: '', imagen_url: '' });
+        setNuevaReceta(ESTADO_INICIAL_RECETA);
         setIsModalOpen(true);
     };
 
     const abrirModalEditar = (receta: Receta) => {
         setRecetaEditandoId(receta.id);
+        
+        // Mapeamos los ingredientes que vienen del backend a la estructura que usa el form
+        const ingredientesFormateados = receta.ingredientes?.map(item => ({
+            nombre: item.ingrediente.nombre,
+            cantidad: item.cantidad
+        })) || [{ nombre: '', cantidad: '' }];
+
         setNuevaReceta({
             titulo: receta.titulo,
             descripcion: receta.descripcion,
-            ingredientes: receta.ingredientes,
+            ingredientes: ingredientesFormateados,
             imagen_url: receta.imagen_url || ''
         });
         setIsModalOpen(true);
@@ -57,16 +68,28 @@ export const MisRecetas = () => {
     const cerrarModal = () => {
         setIsModalOpen(false);
         setRecetaEditandoId(null);
-        setNuevaReceta({ titulo: '', descripcion: '', ingredientes: '', imagen_url: '' });
+        setNuevaReceta(ESTADO_INICIAL_RECETA);
     };
 
     const handleEliminar = async (id: number) => {
-        if (window.confirm('¿Está seguro de querer borrar esta receta?')) {
+        const result = await Swal.fire({
+            title: '¿Estás segura?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ff4d4f',
+            cancelButtonColor: '#9e9e9e',
+            confirmButtonText: 'Sí, borrar receta',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
             try {
                 await eliminarReceta(id);
                 cargarRecetas();
+                Swal.fire('¡Eliminada!', 'Tu receta ha sido borrada.', 'success');
             } catch (error) {
-                alert("Error al eliminar la receta");
+                Swal.fire('Error', 'Hubo un problema al eliminar la receta', 'error');
                 console.error(error);
             }
         }
@@ -77,13 +100,15 @@ export const MisRecetas = () => {
         try {
             if (recetaEditandoId) {
                 await actualizarReceta(recetaEditandoId, nuevaReceta);
+                Swal.fire('¡Actualizada!', 'Tu receta ha sido guardada', 'success');
             } else {
                 await crearReceta(nuevaReceta);
+                Swal.fire('¡Creada!', 'Tu nueva receta ya está en tu muro', 'success');
             }
             cerrarModal();
             cargarRecetas();
         } catch (error) {
-            alert(recetaEditandoId ? "Error al editar la receta" : "Hubo un error al crear la receta");
+            Swal.fire('Error', recetaEditandoId ? "Error al editar la receta" : "Hubo un error al crear la receta", 'error');
             console.error(error);
         }
     };
@@ -92,11 +117,38 @@ export const MisRecetas = () => {
         setNuevaReceta({ ...nuevaReceta, [e.target.name]: e.target.value });
     };
 
+    // --- NUEVAS FUNCIONES PARA EL ARRAY DE INGREDIENTES ---
+    const handleIngredientChange = (index: number, campo: keyof IngredienteItem, valor: string) => {
+        const nuevosIngredientes = [...nuevaReceta.ingredientes];
+        nuevosIngredientes[index][campo] = valor;
+        setNuevaReceta({ ...nuevaReceta, ingredientes: nuevosIngredientes });
+    };
+
+    const handleAddIngredient = () => {
+        setNuevaReceta({
+            ...nuevaReceta,
+            ingredientes: [...nuevaReceta.ingredientes, { nombre: '', cantidad: '' }]
+        });
+    };
+
+    const handleRemoveIngredient = (index: number) => {
+        const nuevosIngredientes = nuevaReceta.ingredientes.filter((_, i) => i !== index);
+        setNuevaReceta({ ...nuevaReceta, ingredientes: nuevosIngredientes });
+    };
+    // -------------------------------------------------------
+
     const copiarLinkPublico = (id: number) => {
         const urlPublica = `${window.location.origin}/receta/${id}`;
         navigator.clipboard.writeText(urlPublica)
             .then(() => {
-                alert("Link copiado en el portapapeles");
+                Swal.fire({
+                    toast: true,
+                    position: 'bottom-end',
+                    icon: 'success',
+                    title: 'Link copiado al portapapeles',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             })
             .catch(err => {
                 console.error("Error al copiar:", err);
@@ -142,6 +194,9 @@ export const MisRecetas = () => {
                 isEditing={!!recetaEditandoId}
                 nuevaReceta={nuevaReceta}
                 onChange={handleChange}
+                onIngredientChange={handleIngredientChange}
+                onAddIngredient={handleAddIngredient}
+                onRemoveIngredient={handleRemoveIngredient}
             />
         </div>
     );

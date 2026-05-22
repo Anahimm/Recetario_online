@@ -20,10 +20,15 @@ export const obtenerMisRecetas = async () => {
     return data;
 };
 
-interface DatosNuevaReceta {
+export interface IngredienteItem {
+    nombre: string;
+    cantidad: string;
+}
+
+export interface DatosNuevaReceta {
     titulo: string;
     descripcion: string;
-    ingredientes: string;
+    ingredientes: IngredienteItem[];
     imagen_url?: string;
 }
 

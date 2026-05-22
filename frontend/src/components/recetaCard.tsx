@@ -5,7 +5,13 @@ export interface Receta {
     id: number;
     titulo: string;
     descripcion: string;
-    ingredientes: string;
+    ingredientes: {
+        cantidad: string;
+        ingrediente: {
+            nombre: string;
+        };
+    }[];
+
     imagen_url?: string;
     fecha_creacion: string;
     usuario_id: number;
@@ -58,7 +64,15 @@ export const RecetaCard = ({ receta, onEditar, onEliminar, onCopiar, esPublica, 
                 
                 <div className={styles.detalles}>
                     <strong>Ingredientes:</strong>
-                    <p>{receta.ingredientes}</p>
+                    {/* --- NUEVA FORMA DE RENDERIZAR LA LISTA --- */}
+                    <ul style={{ margin: '5px 0', paddingLeft: '20px', fontSize: '0.9rem', color: '#555' }}>
+                        {receta.ingredientes?.map((item, index) => (
+                            <li key={index} style={{ textTransform: 'capitalize' }}>
+                                <strong>{item.cantidad}</strong> de {item.ingrediente.nombre}
+                            </li>
+                        ))}
+                    </ul>
+                    {/* ------------------------------------------ */}
                 </div>
 
                 {esPublica ? (
