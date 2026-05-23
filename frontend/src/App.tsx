@@ -6,6 +6,7 @@ import { Registro } from './pages/registro';
 import { MisRecetas } from './pages/misRecetas';
 import { RecetaPublica } from './pages/recetaPublica';
 import { Explorar } from './pages/explorar';
+import { RutaProtegida } from './components/rutaProtegida'; 
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
-            <Route path="/mis-recetas" element={<MisRecetas />} />
+            <Route element={<RutaProtegida />}>
+              <Route path="/mis-recetas" element={<MisRecetas />} />
+            </Route>
             <Route path="/receta/:id" element={<RecetaPublica />} />
             <Route path="/explorar" element={<Explorar />} />
           </Routes>

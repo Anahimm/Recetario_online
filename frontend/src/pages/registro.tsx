@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { registrarUsuario } from '../services/auth.service';
 import { useAuth } from '../context/AuthContext';
 import styles from './registro.module.css';
-import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react'; // <-- Agregamos User a la lista
+import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import Swal from 'sweetalert2'; 
 
 export const Registro = () => {
     const navigate = useNavigate();
@@ -17,8 +18,6 @@ export const Registro = () => {
     });
 
     const [error, setError] = useState('');
-    
-    // Dos estados independientes para que cada ojito funcione por separado
     const [mostrarPassword, setMostrarPassword] = useState(false);
     const [mostrarConfirmarPassword, setMostrarConfirmarPassword] = useState(false);
 
@@ -40,15 +39,26 @@ export const Registro = () => {
                 nombre: formData.nombre,
                 apellido: formData.apellido,
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                confirmarPassword: formData.confirmarPassword 
             });
 
             if (respuesta && respuesta.token) {
                 iniciarSesion(formData.nombre, respuesta.token);
-                alert(`¡Cuenta creada con éxito! Bienvenida/o, ${formData.nombre}.`);
+                Swal.fire({
+                    title: '¡Bienvenida/o!',
+                    text: `Cuenta creada con éxito, ${formData.nombre}.`,
+                    icon: 'success',
+                    confirmButtonColor: '#ff6b00'
+                });
                 navigate('/mis-recetas');
             } else {
-                alert('¡Usuario creado con éxito! Por favor, iniciá sesión.');
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'Usuario creado con éxito. Por favor, iniciá sesión.',
+                    icon: 'success',
+                    confirmButtonColor: '#ff6b00'
+                });
                 navigate('/login');
             }
 
@@ -67,25 +77,21 @@ export const Registro = () => {
                 <h2>Crear Cuenta</h2>
                 {error && <p className={styles.error}>{error}</p>}
 
-                {/* Input Nombre */}
                 <div className={styles.inputContainer}>
                     <span><User size={20} /></span>
                     <input type="text" name="nombre" value={formData.nombre} placeholder="Nombre" onChange={handleChange} required />
                 </div>
 
-                {/* Input Apellido */}
                 <div className={styles.inputContainer}>
                     <span><User size={20} /></span>
                     <input type="text" name="apellido" value={formData.apellido} placeholder="Apellido" onChange={handleChange} required />
                 </div>
 
-                {/* Input Email */}
                 <div className={styles.inputContainer}>
                     <span><Mail size={20} /></span>
                     <input type="email" name="email" value={formData.email} placeholder="Correo Electrónico" onChange={handleChange} required />
                 </div>
 
-                {/* Input Contraseña */}
                 <div className={styles.inputContainer}>
                     <span><Lock size={20} /></span>
                     <input 
@@ -107,7 +113,6 @@ export const Registro = () => {
                     </button>
                 </div>
 
-                {/* Input Repetir Contraseña */}
                 <div className={styles.inputContainer}>
                     <span><Lock size={20} /></span>
                     <input 

@@ -3,6 +3,7 @@ interface DatosRegistro {
     apellido: string;
     email: string;
     password: string;
+    confirmarPassword: string;
 }
 
 
