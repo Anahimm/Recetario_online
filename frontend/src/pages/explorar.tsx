@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './misRecetas.module.css'; 
 import { RecetaCard, type Receta } from '../components/recetaCard';
 import { obtenerMuroPublico, enviarCalificacion } from '../services/recetas.service'; 
+import Swal from 'sweetalert2';
 
 export const Explorar = () => {
     const [recetas, setRecetas] = useState<Receta[]>([]);
@@ -26,7 +27,12 @@ export const Explorar = () => {
         const token = localStorage.getItem('token'); 
         
         if (!token) {
-            alert("¡Tenés que iniciar sesión para calificar las recetas!");
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Aviso!',
+                text: 'Tenés que iniciar sesión para calificar las recetas.',
+                confirmButtonColor: '#F08D39'
+            });
             return;
         }
 
@@ -34,7 +40,12 @@ export const Explorar = () => {
             await enviarCalificacion(recetaId, puntaje, token);
             cargarMuro(); 
         } catch (error) {
-            alert("Hubo un error al guardar tu calificación. ¿Ya votaste esta receta?");
+            Swal.fire({
+                icon: 'error',
+                title: 'Ups...',
+                text: 'Hubo un error al guardar tu calificación. ¿Quizás ya votaste esta receta?',
+                confirmButtonColor: '#d62828'
+            });
             console.error(error);
         }
     };
@@ -44,8 +55,10 @@ export const Explorar = () => {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1>Recetas de la Comunidad</h1>
-                <p>Descubrí y calificá las mejores recetas.</p>
+                <div className={styles.headerInfo}>
+                    <h1>Recetas de la Comunidad</h1>
+                    <p>Descubrí y calificá las mejores recetas.</p>
+                </div>
             </header>
 
             {recetas.length === 0 ? (

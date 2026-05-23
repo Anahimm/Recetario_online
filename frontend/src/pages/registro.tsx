@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registrarUsuario } from '../services/auth.service';
 import { useAuth } from '../context/AuthContext';
-import styles from './registro.module.css';
+import styles from './formulario.module.css';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Swal from 'sweetalert2'; 
 
@@ -133,8 +133,8 @@ export const Registro = () => {
                         {mostrarConfirmarPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                     </button>
                 </div>
-
-                <button type="submit">Registrarse</button>
+                <button type="submit" className="btn btnNormal btnNaranja">Registrarse</button>
+                
                 <p className={styles.linkText}>
                     ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión acá</Link>
                 </p>

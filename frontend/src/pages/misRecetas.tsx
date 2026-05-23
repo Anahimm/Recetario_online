@@ -5,11 +5,10 @@ import { RecetaModal } from '../components/recetaModal';
 import styles from './misRecetas.module.css';
 import Swal from 'sweetalert2'; 
 
-// Definimos el estado inicial como una constante para mantener el código limpio
 const ESTADO_INICIAL_RECETA = {
     titulo: '',
     descripcion: '',
-    ingredientes: [{ nombre: '', cantidad: '' }], // Arranca con 1 ingrediente vacío
+    ingredientes: [{ nombre: '', cantidad: '' }], 
     imagen_url: ''
 };
 
@@ -17,7 +16,6 @@ export const MisRecetas = () => {
     const [recetas, setRecetas] = useState<Receta[]>([]);
     const [cargando, setCargando] = useState(true);
 
-    // ESTADOS PARA EL MODAL
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [recetaEditandoId, setRecetaEditandoId] = useState<number | null>(null);
     const [nuevaReceta, setNuevaReceta] = useState(ESTADO_INICIAL_RECETA);
@@ -40,7 +38,6 @@ export const MisRecetas = () => {
         cargarRecetas();
     }, []);
 
-    // --- FUNCIONES PARA MANEJAR EL MODAL Y ELIMINAR ---
     const abrirModalCrear = () => {
         setRecetaEditandoId(null);
         setNuevaReceta(ESTADO_INICIAL_RECETA);
@@ -50,7 +47,6 @@ export const MisRecetas = () => {
     const abrirModalEditar = (receta: Receta) => {
         setRecetaEditandoId(receta.id);
         
-        // Mapeamos los ingredientes que vienen del backend a la estructura que usa el form
         const ingredientesFormateados = receta.ingredientes?.map(item => ({
             nombre: item.ingrediente.nombre,
             cantidad: item.cantidad
@@ -117,7 +113,6 @@ export const MisRecetas = () => {
         setNuevaReceta({ ...nuevaReceta, [e.target.name]: e.target.value });
     };
 
-    // --- NUEVAS FUNCIONES PARA EL ARRAY DE INGREDIENTES ---
     const handleIngredientChange = (index: number, campo: keyof IngredienteItem, valor: string) => {
         const nuevosIngredientes = [...nuevaReceta.ingredientes];
         nuevosIngredientes[index][campo] = valor;
@@ -135,7 +130,6 @@ export const MisRecetas = () => {
         const nuevosIngredientes = nuevaReceta.ingredientes.filter((_, i) => i !== index);
         setNuevaReceta({ ...nuevaReceta, ingredientes: nuevosIngredientes });
     };
-    // -------------------------------------------------------
 
     const copiarLinkPublico = (id: number) => {
         const urlPublica = `${window.location.origin}/receta/${id}`;
@@ -164,7 +158,7 @@ export const MisRecetas = () => {
                 <h1>¡Hola, {nombre || 'Chef'}! 👩‍🍳</h1>
                 <p>Acá podés gestionar todas tus recetas</p>
                 </div>
-                <button className={`${styles.btn} ${styles.btnNormal} ${styles.btnNaranja}`} onClick={abrirModalCrear}>
+                <button className="btn btnNormal btnNaranja" onClick={abrirModalCrear}>
                     + Crear Receta
                 </button>
             </header>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { iniciarSesion as loginAPI } from '../services/auth.service';
 import { useAuth } from '../context/AuthContext';
-import styles from './login.module.css';
+import styles from './formulario.module.css';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Swal from 'sweetalert2';
 
@@ -38,7 +38,7 @@ export const Login = () => {
                 text: `¡Bienvenida/o de vuelta, ${nombreUsuario}!`,
                 icon: 'success',
                 confirmButtonText: 'Empezar a cocinar',
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#F08D39' 
             });
             navigate('/mis-recetas');
 
@@ -93,8 +93,8 @@ export const Login = () => {
                         {mostrarPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                     </button>
                 </div>
-
-                <button type="submit">Entrar</button>
+                <button type="submit" className="btn btnNormal btnNaranja">Entrar</button>
+                
                 <p className={styles.linkText}>
                     ¿No tenés cuenta? <Link to="/registro">Registrate acá</Link>
                 </p>

@@ -64,15 +64,13 @@ export const RecetaCard = ({ receta, onEditar, onEliminar, onCopiar, esPublica, 
                 
                 <div className={styles.detalles}>
                     <strong>Ingredientes:</strong>
-                    {/* --- NUEVA FORMA DE RENDERIZAR LA LISTA --- */}
-                    <ul style={{ margin: '5px 0', paddingLeft: '20px', fontSize: '0.9rem', color: '#555' }}>
+                    <ul style={{ margin: '5px 0', paddingLeft: '20px', fontSize: '0.9rem', color: 'var(--color-texto-secundario)' }}>
                         {receta.ingredientes?.map((item, index) => (
                             <li key={index} style={{ textTransform: 'capitalize' }}>
                                 <strong>{item.cantidad}</strong> de {item.ingrediente.nombre}
                             </li>
                         ))}
                     </ul>
-                    {/* ------------------------------------------ */}
                 </div>
 
                 {esPublica ? (
@@ -88,13 +86,13 @@ export const RecetaCard = ({ receta, onEditar, onEliminar, onCopiar, esPublica, 
                     </div>
                 ) : (
                     <div className={styles.accionesReceta}>
-                        <button onClick={onEditar} className={`${styles.btn} ${styles.btnChico} ${styles.btnOutlineAzul}`}>
+                        <button onClick={onEditar} className="btn btnChico btnOutlineAzul">
                             Editar
                         </button>
-                        <button onClick={onEliminar} className={`${styles.btn} ${styles.btnChico} ${styles.btnOutlineNaranja}`}>
+                        <button onClick={onEliminar} className="btn btnChico btnOutlineNaranja">
                             Eliminar
                         </button>
-                        <button onClick={onCopiar} className={`${styles.btn} ${styles.btnChico} ${styles.btnGris}`}>
+                        <button onClick={onCopiar} className="btn btnChico btnGris">
                             🔗 Copiar Link
                         </button>
                     </div>

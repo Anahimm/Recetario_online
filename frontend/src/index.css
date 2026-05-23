@@ -1,11 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-
 :root {
+    /* --- Paleta de Colores --- */
+    --color-primario: #F08D39;
+    --color-primario-hover: #d67a2b;
+    --color-primario-suave: #f3d4b6;
+
     --color-fondo: #E8EDF2;
-    --color-texto: #333333;
-    --color-primario: #5E7AC4;
+    --color-fondo-blanco: #ffffff;
+    --color-fondo-input: #f9fafb;
+    --color-fondo-destacado: #fdfaf6;
+
+    --color-texto-principal: #333333;
+    --color-texto-secundario: #666666;
+    --color-texto-mutado: #888888;
+
+    --color-borde: #e5e7eb;
+    --color-borde-fuerte: #ddd;
+
+    --color-error: #d62828;
+    --color-error-fondo: #ffe5e5;
+
+    --color-azul: #0077b6;
+
+    /* --- Tipografía --- */
     --fuente-principal: "Montserrat", sans-serif;
+
+    /* --- Sombras Estandarizadas --- */
+    --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --sombra-fuerte: 0 10px 25px rgba(0, 0, 0, 0.2);
+    --sombra-hover-naranja: 0 15px 30px rgba(240, 141, 57, 0.15);
+
+    /* --- Radios de Borde --- */
+    --radio-sm: 4px;
+    --radio-md: 6px;
+    --radio-lg: 12px;
+    --radio-xl: 15px;
 }
 
 * {
@@ -16,8 +47,90 @@
 
 body {
     background-color: var(--color-fondo);
-    color: var(--color-texto);
+    color: var(--color-texto-principal);
     font-family: var(--fuente-principal);
-    color: var(--color-texto);
     -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================
+    CLASES GLOBALES Y COMPONENTES REUTILIZABLES
+   ========================================= */
+
+/* --- Botones Globales --- */
+.btn {
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: var(--radio-md);
+    transition: all 0.2s ease;
+    text-align: center;
+    display: inline-block;
+    font-family: var(--fuente-principal);
+}
+
+.btnNormal {
+    padding: 0.8rem 1.5rem;
+}
+
+.btnChico {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radio-sm);
+}
+
+.btnNaranja {
+    background: var(--color-primario);
+    color: var(--color-fondo-blanco);
+    border: none;
+}
+
+.btnNaranja:hover {
+    background: var(--color-primario-hover);
+    transform: translateY(-2px);
+}
+
+.btnOutlineNaranja {
+    background: transparent;
+    color: var(--color-primario);
+    border: 1px solid var(--color-primario);
+}
+
+.btnOutlineNaranja:hover {
+    background: var(--color-primario);
+    color: var(--color-fondo-blanco);
+}
+
+.btnGris {
+    background: transparent;
+    color: var(--color-texto-secundario);
+    border: 1px solid #ccc;
+}
+
+.btnGris:hover {
+    background: #eee;
+}
+
+.btnOutlineAzul {
+    background: transparent;
+    color: var(--color-azul);
+    border: 1px solid var(--color-azul);
+}
+
+.btnOutlineAzul:hover {
+    background: var(--color-azul);
+    color: var(--color-fondo-blanco);
+}
+
+/* --- Inputs Globales --- */
+.input-base {
+    padding: 0.8rem;
+    border: 1px solid var(--color-borde-fuerte);
+    border-radius: var(--radio-md);
+    font-family: inherit;
+    width: 100%;
+    background-color: var(--color-fondo-blanco);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-base:focus {
+    border-color: var(--color-primario);
 }

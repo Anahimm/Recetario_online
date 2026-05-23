@@ -7,7 +7,7 @@
     width: 50px;
     height: 50px;
     cursor: pointer;
-    border-radius: 15px;
+    border-radius: var(--radio-xl);
     object-fit: cover;
     filter: grayscale(100%) opacity(50%);
     border: 3px solid transparent;
@@ -16,6 +16,25 @@
 
 .chefActivo {
     filter: none;
-    border-color: #ff9f1c; 
+    border-color: var(--color-primario); 
     transform: scale(1.1); 
+}
+
+.contenedorCalificacion {
+    margin-top: 15px;
+    border-top: 1px solid var(--color-borde-fuerte);
+    padding-top: 10px;
+}
+
+.tituloCalificacion {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--color-texto-principal); 
+}
+
+.textoCalificaciones {
+    color: var(--color-texto-mutado);
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
 }

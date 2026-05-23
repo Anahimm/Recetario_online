@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { obtenerRecetaPublica } from '../services/recetas.service';
-import styles from './misRecetas.module.css'; 
+import styles from './recetaPublica.module.css'; 
 
-// Actualizamos la interfaz para coincidir con la de RecetaCard
 interface RecetaPublica {
     id: number;
     titulo: string;
@@ -43,19 +42,21 @@ export const RecetaPublica = () => {
         cargarReceta();
     }, [id]);
 
-    if (cargando) return <div className={styles.loader}>Cargando receta...</div>;
+    if (cargando) return <div>Cargando receta...</div>;
     
     if (error || !receta) return (
-        <div className={`${styles.container} ${styles.errorContainer}`}>
+        <div className={`${styles.containerDetail} ${styles.errorContainer}`}>
             <h2>Ups, no encontramos esta receta 😕</h2>
             <p>{error}</p>
-            <Link to="/" className={`${styles.btn} ${styles.btnNormal} ${styles.btnNaranja}`}>Ir al inicio</Link>
+            <Link to="/" className="btn btnNormal btnNaranja" style={{ marginTop: '1rem' }}>
+                Ir al inicio
+            </Link>
         </div>
     );
 
     return (
         <div className={styles.containerDetail}>
-            <article className={styles.card}>
+            <article>
                 {receta.imagen_url && (
                     <div className={styles.detailImageWrapper}>
                         <img 
@@ -71,7 +72,7 @@ export const RecetaPublica = () => {
                     </h1>
                     
                     <p className={styles.detailMeta}>
-                        👨‍🍳 Creado por: <strong>{receta.usuario.nombre} {receta.usuario.apellido}</strong> <br/>
+                        👨‍🍳 Creado por: <strong className={styles.autor}>{receta.usuario.nombre} {receta.usuario.apellido}</strong> <br/>
                         📅 {new Date(receta.fecha_creacion).toLocaleDateString()}
                     </p>
 
@@ -82,15 +83,13 @@ export const RecetaPublica = () => {
 
                     <h3 className={styles.sectionTitle}>Ingredientes</h3>
                     <div className={styles.ingredientsBox}>
-                        {/* --- RENDERIZADO DE LA LISTA RELACIONAL --- */}
                         <ul style={{ margin: 0, paddingLeft: '20px' }}>
                             {receta.ingredientes?.map((item, index) => (
-                                <li key={index} style={{ marginBottom: '8px', textTransform: 'capitalize' }}>
+                                <li key={index} className={styles.ingredientsText} style={{ marginBottom: '8px', textTransform: 'capitalize' }}>
                                     <strong>{item.cantidad}</strong> de {item.ingrediente.nombre}
                                 </li>
                             ))}
                         </ul>
-                        {/* ------------------------------------------ */}
                     </div>
                 </div>
             </article>

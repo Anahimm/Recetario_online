@@ -3,22 +3,38 @@
     justify-content: space-between;
     align-items: center;
     padding: 2.5rem 2.5rem;
-    background-color: #F3BE7A;
+    background-color: var(--color-primario-suave);
     border-bottom: none;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--sombra-suave);
 }
 
 .logo {
     display: flex;
     align-items: center;
+    margin-left: 50px;
 }
 
 .logo a {
     font-size: 1.6rem;
     font-weight: 800;
-    color: #333333;
+    color: var(--color-texto-principal);
     text-decoration: none;
     letter-spacing: -0.5px;
+}
+
+.logoLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logoImg {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    border: 2px solid var(--color-primario);
 }
 
 .links {
@@ -32,35 +48,35 @@
 
 .links a {
     text-decoration: none;
-    color: #555555;
+    color: var(--color-texto-secundario);
     font-weight: 600;
     font-size: 1rem;
     transition: color 0.2s ease-in-out;
 }
 
 .links a:hover {
-    color: #ffffff;
+    color: var(--color-fondo-blanco);
 }
 
 .userName {
     font-weight: bold;
-    color: #555;
+    color: var(--color-texto-secundario);
     font-size: 0.95rem;
 }
 
 .btnLogout {
-    background-color: #F08D39;
-    color: #ffffff;
+    background-color: var(--color-primario);
+    color: var(--color-fondo-blanco);
     border: none;
     padding: 0.6rem 1.2rem;
-    border-radius: 6px;
+    border-radius: var(--radio-md);
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .btnLogout:hover {
-    background-color: #d67a2b;
+    background-color: var(--color-primario-hover);
     transform: translateY(-2px);
 }
 
@@ -72,9 +88,8 @@
         text-align: center;
     }
 
-    .logo a {
-        font-size: 1.4rem;
-    }
+    .logo a { font-size: 1.4rem; }
+    .logo { margin-left: 0; }
 
     .links {
         flex-wrap: wrap;
@@ -82,25 +97,4 @@
         gap: 1rem;
         width: 100%;
     }
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    margin-left: 50px;
-}
-
-.logoLink {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-
-.logoImg {
-    width: 120x;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    overflow: hidden;
-    border: 2px solid #F08D39;
 }

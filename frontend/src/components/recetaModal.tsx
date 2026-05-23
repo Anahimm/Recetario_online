@@ -1,5 +1,6 @@
-import styles from '../pages/misRecetas.module.css';
-import {type IngredienteItem } from '../services/recetas.service'; 
+import React from 'react';
+import styles from './recetaModal.module.css';
+import { type IngredienteItem } from '../services/recetas.service'; 
 
 interface RecetaModalProps {
     isOpen: boolean;
@@ -35,15 +36,19 @@ export const RecetaModal = ({
                     <input
                         type="text" name="titulo" placeholder="Título de la receta" required
                         value={nuevaReceta.titulo} onChange={onChange}
+                        className="input-base"
                     />
                     <textarea
                         name="descripcion" placeholder="Descripción" required
                         value={nuevaReceta.descripcion} onChange={onChange}
+                        className="input-base"
                     />
 
-                    {/* --- NUEVA SECCIÓN DINÁMICA DE INGREDIENTES --- */}
-                    <div className={styles.ingredientesContainer}>
-                        <p><strong>Ingredientes:</strong></p>
+                    {/* --- SECCIÓN DINÁMICA DE INGREDIENTES --- */}
+                    <div>
+                        <p style={{ marginBottom: '0.5rem', color: 'var(--color-texto-principal)' }}>
+                            <strong>Ingredientes:</strong>
+                        </p>
                         {nuevaReceta.ingredientes.map((ingrediente, index) => (
                             <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                                 <input
@@ -52,6 +57,7 @@ export const RecetaModal = ({
                                     required
                                     value={ingrediente.nombre}
                                     onChange={(e) => onIngredientChange(index, 'nombre', e.target.value)}
+                                    className="input-base"
                                     style={{ flex: 2 }}
                                 />
                                 <input
@@ -60,14 +66,15 @@ export const RecetaModal = ({
                                     required
                                     value={ingrediente.cantidad}
                                     onChange={(e) => onIngredientChange(index, 'cantidad', e.target.value)}
+                                    className="input-base"
                                     style={{ flex: 1 }}
                                 />
-                                {/* Solo mostramos el botón de borrar si hay más de 1 ingrediente */}
                                 {nuevaReceta.ingredientes.length > 1 && (
                                     <button 
                                         type="button" 
                                         onClick={() => onRemoveIngredient(index)}
-                                        style={{ backgroundColor: '#ff4d4f', color: 'white', border: 'none', borderRadius: '4px', padding: '0 10px', cursor: 'pointer' }}
+                                        className="btn btnChico"
+                                        style={{ backgroundColor: 'var(--color-error)', color: 'white', border: 'none' }}
                                     >
                                         X
                                     </button>
@@ -77,23 +84,24 @@ export const RecetaModal = ({
                         <button 
                             type="button" 
                             onClick={onAddIngredient}
-                            style={{ backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', padding: '5px 10px', cursor: 'pointer', marginBottom: '15px' }}
+                            className="btn btnChico btnOutlineNaranja"
+                            style={{ marginBottom: '15px' }}
                         >
                             + Agregar otro ingrediente
                         </button>
                     </div>
-                    {/* ----------------------------------------------- */}
 
                     <input
                         type="url" name="imagen_url" placeholder="Link de una imagen (Opcional)"
                         value={nuevaReceta.imagen_url || ''} onChange={onChange}
+                        className="input-base"
                     />
 
                     <div className={styles.modalBotones}>
-                        <button type="button" className={`${styles.btn} ${styles.btnNormal} ${styles.btnGris}`} onClick={onClose}>
+                        <button type="button" className="btn btnNormal btnGris" onClick={onClose}>
                             Cancelar
                         </button>
-                        <button type="submit" className={`${styles.btn} ${styles.btnNormal} ${styles.btnNaranja}`}>
+                        <button type="submit" className="btn btnNormal btnNaranja">
                             {isEditing ? 'Guardar Cambios' : 'Guardar Receta'}
                         </button>
                     </div>

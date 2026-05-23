@@ -26,7 +26,7 @@ export const Navbar = () => {
                     <>
                         <li><Link to="/mis-recetas">Mis Recetas</Link></li>
                         <li>
-                            <button onClick={handleLogout} className={styles.btnLogout}>
+                            <button onClick={handleLogout} className="btn btnNormal btnNaranja">
                                 Cerrar Sesión
                             </button>
                         </li>
