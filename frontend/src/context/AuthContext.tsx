@@ -17,6 +17,7 @@ const tokenEsValido = (token: string | null): boolean => {
         const payloadDecodificado = JSON.parse(atob(payloadBase64));
         const tiempoActual = Math.floor(Date.now() / 1000);
         return payloadDecodificado.exp > tiempoActual;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         return false;
     }
@@ -41,7 +42,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     // Como leímos todo instantáneamente de forma síncrona, ya no hay "tiempo de carga"
-    const [cargando, setCargando] = useState<boolean>(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [cargando, _setCargando] = useState<boolean>(false);
 
     const iniciarSesion = (nombre: string, token: string) => {
         localStorage.setItem('token', token);
