@@ -1,13 +1,13 @@
-# 📖 Las Recetas de Anahí - Challenge Fullstack
+# 📖 Las Recetas de Anahí - Proyecto Fullstack
 
-Proyecto desarrollado para el desafío técnico de **Terrand**. Se trata de una plataforma de gestión de recetas culinarias donde los usuarios pueden registrarse, administrar sus propias recetas y compartir enlaces públicos de sus creaciones, incorporando un sistema de calificación interactivo inspirado en la gastronomía argentina.
+Se trata de una plataforma de gestión de recetas culinarias donde los usuarios pueden registrarse, administrar sus propias recetas y compartir enlaces públicos de sus creaciones, incorporando un sistema de calificación interactivo inspirado en la gastronomía argentina.
 
 🔗 Link al Proyecto en Vivo: [las recetas de Anahí](https://lasrecetasdeanahi.netlify.app/)
 
 > **👤 Credenciales de Prueba:**
 > Podés crear un usuario nuevo o usar este de prueba: 
-> * **Mail:** test@terrand.com 
-> * **Pass:** 123456
+> * **Mail:** admin@test.com 
+> * **Pass:** admin123
 
 ## 🚀 Tecnologías Utilizadas
 
@@ -58,7 +58,7 @@ La persistencia de datos se modeló en **PostgreSQL**, aprovechando las capacida
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://github.com/Anahimm/desafio_terrand.git](https://github.com/Anahimm/desafio_terrand.git)
+   git clone [https://github.com/Anahimm/Recetario_online.git](https://github.com/Anahimm/Recetario_online.git)
    ```
 
 2. **Configurar el Backend:**
